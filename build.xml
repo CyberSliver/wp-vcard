@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="wp-vcard" basedir="." default="help">
+	<!--
+		When using Eclipse, set the following variables:
+		php_command		PHP binary.
+		pear_home		PEAR installation dir.
+		phing_command	Phing binary.
+		phing_home		Phing installation dir.
+		
+		Add a new builder, specify ${phing_command} as the builder.
+		Add environment variables:
+		PHING_HOME		${phing_home}
+		PHP_COMMAND		${php_command}
+		PHP_CLASSPATH	${pear_home}
+	-->
+	
+	<property file="user.build.properties" />
+	<property file="build.properties" />
+	
+	<taskdef name="jsmin" classname="libs.build.phing.JsMinTask" />
+	
+	<target name="help">
+    	<echo>
+	    Welcome to the phing script!
+	    ----------------------------
+	    You may use the following commands:
+ 
+	              phing   &lt;target name&gt;
+ 
+	    where &lt;target name&gt; can be one of the following:
+ 
+	    - help    : this page
+    	</echo>
+  	</target>
+	
+	<target name="-check-settings">
+		<echo level="info">Checking settings...</echo>
+		<condition property="propsOk">
+			<and>
+				<isset property="src.dir"/>
+				<isset property="build.dir"/>
+				<isset property="test.dir"/>
+				<isset property="dist.dir"/>
+				<isset property="libs.dir"/>
+			</and>
+		</condition>
+	</target>
+	
+	<!--
+		Target init
+	-->
+	<target name="-pre-build">
+		<property name="dest.dir" value="${build.dir}"/>
+		<mkdir dir="${build.dir}"/>
+	</target>
+	
+	<target name="-pre-test">
+		<property name="dest.dir" value="${test.dir}"/>
+		<mkdir dir="${test.dir}"/>
+	</target>
+	
+	<target name="-pre-dist">
+		<property name="dest.dir" value="${dist.dir}"/>
+		<mkdir dir="${dist.dir}"/>
+	</target>
+
+	<!--
+		Main targets
+	-->
+	<target
+		name="build" depends="-check-settings,-pre-build"
+		if="propsOk" description="Build project."
+	>
+		<phingcall target="-build-static"/>
+	</target>
+
+	<target
+		name="build-test" depends="-check-settings,build,-build-test"
+		if="propsOk" description="Build project tests."
+	>
+	</target>
+
+	<target
+		name="test" depends="-check-settings,-pre-test,build,build-test"
+		if="propsOk" description="Test project."
+	>
+		<phingcall target="-test-static"/>
+	</target>
+
+	<target
+		name="dist" depends="-check-settings,-pre-dist,build"
+		if="propsOk" description="Create distribution package."
+	>
+		<phingcall target="-dist-static"/>
+	</target>
+
+	<target
+		name="clean" depends="-check-settings"
+		if="propsOk" description="Clean build, test and dist files."
+	>
+		<phingcall target="-clean-build"/>
+		<phingcall target="-clean-test"/>
+		<phingcall target="-clean-dist"/>
+	</target>
+
+	<!--
+		Build
+	-->
+	<target name="-build-static">
+		<echo level="info">Building static content...</echo>
+		<phingcall target="-build-static-js"/>
+	</target>
+
+	<target name="-build-static-js">
+		<echo>Copying JavaScript files from ${src.dir}js to ${build.dir}js...</echo>
+		<copy todir="${build.dir}js" includeemptydirs="true">
+			<fileset dir="${src.dir}js"/>
+		</copy>
+	</target>
+	
+	<!--
+		Test
+	-->
+	<target name="-build-test">
+		<phingcall target="-build-test-static"/>
+	</target>
+	
+	<target name="-build-test-static">
+		<phingcall target="-build-test-static-js"/>
+	</target>
+	
+	<target name="-build-test-static-js">
+		<echo>Copying JavaScript files from ${src.dir}js to ${test.dir}js...</echo>
+		<copy todir="${test.dir}js" includeemptydirs="true">
+			<fileset dir="${src.dir}js"/>
+		</copy>
+	</target>
+	
+	<target name="-test-static">
+		<!-- <ant dir="${src.dir}" target="-test-static"/> -->
+	</target>
+
+	<target name="-test-static-js">
+	</target>
+	
+	<!--
+		Dist
+	-->
+	<target name="-dist-static">
+		<phingcall target="-dist-static-js"/>
+	</target>
+
+	<target name="-dist-static-js">
+		<echo>Minimizing JavaScript files from ${src.dir}js to ${dist.dir}js...</echo>
+		<jsmin destdir="${dist.dir}js" force="false">
+			<fileset dir="${build.dir}js" includes="**/*.js"/>
+		</jsmin>
+	</target>
+	
+	<target name="-dist-libs">
+		<echo>Copying Libraries to ${dist.dir}...</echo>
+	</target>
+	
+	<!--
+		Clean
+	-->
+	<target name="-clean-build">
+		<delete failonerror="false" includeemptydirs="true">
+			<fileset dir="${build.dir}" includes="**/**"/>
+		</delete>
+	</target>
+	
+	<target name="-clean-test">
+		<phingcall target="-clean-test-static"/>
+	</target>
+	
+	<target name="-clean-dist">
+		<delete failonerror="false" includeemptydirs="true">
+			<fileset dir="${dist.dir}" includes="**/**"/>
+		</delete>
+	</target>
+	
+	<target name="-clean-test-static">
+		<delete failonerror="false" includeemptydirs="true">
+			<fileset dir="${test.dir}js" includes="**/**"/>
+		</delete>
+	</target>
+	
+</project>

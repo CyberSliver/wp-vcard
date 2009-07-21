@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-libs" basedir="../../" default="help">
+
+	<target name="help">
+    	<echo>
+	    Welcome to the phing script!
+	    ----------------------------
+	    You may use the following commands:
+ 
+	              phing   &lt;target name&gt;
+ 
+	    where &lt;target name&gt; can be one of the following:
+ 
+	    - help    : this page
+    	</echo>
+  	</target>
+
+</project>

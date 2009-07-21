@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	version="XHTML+RDFa 1.0" xml:lang="en"
+>
+<head profile="http://www.w3.org/2006/03/hcard http://gmpg.org/xfn/11">
+	<meta http-equiv="Content-Type" content="application/xml; charset=UTF-8" />
+	<title>WordPress VCard test.</title>
+
+	<link rel="stylesheet" href="../style.css" type="text/css" media="screen" />
+
+</head>
+<body>
+	<div id="main">
+		<div class="vcard">
+			<abbr class="uid" title="#JohnDoe"></abbr>
+			<abbr class="email" title="john.doe@example.org"></abbr>
+			<abbr class="image" title="images/john_doe.jpg"></abbr>
+			<span class="fn">John Doe</span>
+		</div>
+	</div>
+	
+	<script type="text/javascript" src="../js/deferred-script.js"></script>
+	<!-- START: Dynamically added Javascript references -->
+	<script type="text/javascript">
+	deferredJS[0] = {
+			id:			'jquery',
+			url:		'../../libs/jquery/jquery-1.3.2.js',
+			init:		function(){
+							console.log('init jquery-1.3.2');
+						}
+	};
+	deferredJS[1] = {
+			id:			'jquery-ui',
+			url:		'../../libs/jquery/ui/ui.core.js',
+			init:		function(){
+							console.log('init jquery-ui-1.7.2');
+						},
+			depends:	['jquery']
+	};
+	deferredJS[2] = {
+			id:			'rdfquery-uri',
+			url:		'../../libs/rdfquery/jquery.uri.js',
+			depends:	['jquery']
+	};
+	deferredJS[3] = {
+			id:			'rdfquery-datatype',
+			url:		'../../libs/rdfquery/jquery.datatype.js',
+			depends:	['rdfquery-uri']
+	};
+	deferredJS[4] = {
+			id:			'rdfquery-xmlns',
+			url:		'../../libs/rdfquery/jquery.xmlns.js',
+			depends:	['rdfquery-uri']
+	};
+	deferredJS[5] = {
+			id:			'rdfquery-curie',
+			url:		'../../libs/rdfquery/jquery.curie.js',
+			depends:	['rdfquery-uri', 'rdfquery-xmlns']
+	};
+	deferredJS[6] = {
+			id:			'rdfquery-rdf',
+			url:		'../../libs/rdfquery/jquery.rdf.js',
+			depends:	[
+			        	 'rdfquery-uri',
+			        	 'rdfquery-xmlns',
+			        	 'rdfquery-datatype',
+			        	 'rdfquery-curie'
+			        	]
+	};
+	deferredJS[7] = {
+			id:			'rdfquery-hcard',
+			url:		'../../libs/rdfquery/jquery.hcard.vcard.js',
+			depends:	[
+			        	 'rdfquery-uri',
+			        	 'rdfquery-xmlns',
+			        	 'rdfquery-datatype',
+			        	 'rdfquery-curie',
+			        	 'rdfquery-rdf'
+			        	],
+			init:		function() {
+							console.log('RDFQuery hCard ready.');
+						}
+	};
+	deferredJS[8] = {
+			id:			'wp-vcard',
+			url:		'../js/jquery.wp-vcard.js',
+			depends:	['jquery', 'jquery-ui', 'rdfquery-hcard', 'qtip'],
+			init:		function() {
+							console.log('WordPress vCard ready.');
+						}
+	};
+	deferredJS[9] = {
+			id:			'qtip',
+			url:		'../../libs/qtip/jquery.qtip-1.0.0-rc3.js',
+			depends:	'jquery'
+	};
+	</script>
+	<!-- END: Dynamically added Javascript references -->
+</body>
+</html>
